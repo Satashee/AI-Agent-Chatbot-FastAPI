@@ -1,10 +1,12 @@
 # if you dont use pipenv uncomment the following:
-# from dotenv import load_dotenv
-# load_dotenv()
+#from dotenv import load_dotenv
+#load_dotenv()
 
 #Step1: Setup Pydantic Model (Schema Validation)
 from pydantic import BaseModel
 from typing import List
+from fastapi import FastAPI
+from ai_agent import get_response_from_ai_agent
 
 
 class RequestState(BaseModel):
@@ -16,12 +18,14 @@ class RequestState(BaseModel):
 
 
 #Step2: Setup AI Agent from FrontEnd Request
-from fastapi import FastAPI
-from ai_agent import get_response_from_ai_agent
 
 ALLOWED_MODEL_NAMES=["llama3-70b-8192", "mixtral-8x7b-32768", "llama-3.3-70b-versatile", "gpt-4o-mini"]
 
-app=FastAPI(title="LangGraph AI Agent")
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the AI Agent Chatbot API!"}
 
 @app.post("/chat")
 def chat_endpoint(request: RequestState): 
